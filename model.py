@@ -233,11 +233,20 @@ class Model():
         def merge(list, dist = 100):
             pairs = list.copy()
             space = np.array([pairs[i+1][0] - pairs[i][1] for i in np.arange(len(pairs) - 1)])
+            merge_locs = np.where(space > dist)[0].astype(int)
+            if len(merge_locs) == 0:
+                return pairs
             new_list = []
-            merge_locs = np.where(space < dist)[0].astype(int)
-            for loc in merge_locs:
-                pairs[loc][1] = pairs[loc+1][1]
-            new_list = [pairs[i] for i in np.delete(np.arange(len(pairs)), merge_locs)]
+            for i, loc in enumerate(merge_locs):
+                if i == 0:
+                    left = pairs[0][0]
+                try:
+                    right = pairs[loc][1]
+                    new_list.append([left, right])
+                    left = pairs[loc + 1][0]
+                except IndexError:
+                    right = pairs[-1][1]
+                    new_list.append([left, right])
             return new_list
         hits = np.where(self.current_data < thresh)[0]
         if len(hits) == 0:
@@ -245,7 +254,9 @@ class Model():
             self.current_event_index = None
             return
         lims = get_lims(hits)
+        logging.debug(f"Lims are: {lims}")
         merged = merge(lims, tol)
+        logging.debug(f"Merged lims are: {merged}")
         self.event_boundaries = merged
         self.current_event_index = None
 
@@ -261,7 +272,9 @@ class Model():
             self.event_data = self.current_data[(curr_event_boundaries[0] - berth):(curr_event_boundaries[1] + berth)]
         except IndexError:
             logging.debug("Invalid event boundary selected")
+            self.event_data = np.nan
             raise EventError("Run out of events for this batch.")
+        logging.debug(f"Event boundaries are {curr_event_boundaries}")
 
 class EventError(Exception):
     def __init__(self, msg: str):
