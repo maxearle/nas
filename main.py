@@ -27,4 +27,7 @@ if __name__ == "__main__":
     cfg = SettingsControlPanel(settings, buttons)
     w = MainWindow(title = "Translocation Finder: Earle Edition",top = io,mid = plots,bott = cfg)
     ctrlr = Controller(w,model)
-    app.exec()
+    try:
+        app.exec()
+    except:
+        ctrlr._m.output.close()
