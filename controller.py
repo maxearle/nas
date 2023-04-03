@@ -105,9 +105,9 @@ class Controller():
         """Processes the next batch of data and handles any rejections on account of missing events or high range etc.
         the program will stay in this loop until a valid batch is found."""
         while True:
+            self._m.update_next_n(int(self._v.cfg["Samples per Batch"]))
             if is_nan_ignore_None(self._m.last_read):
                 self.finish()
-            self._m.update_next_n(int(self._v.cfg["Samples per Batch"]))
             self.current_trace_n += 1
             if self._v.cfg["Reject high range traces"]:
                 trace_attrs = self._m.gen_trace_props()
@@ -213,10 +213,9 @@ class Controller():
 
     def finish(self):
         """Closes output file and the window"""
-        self.pause()
+        self._v.close()
         self._m.output.close()
         AllDone(f"All done! {len(self._m.tdms.file_list)} tdms files read, {self.accepted_count} events saved.")
-        self._v.close()
 
 
 

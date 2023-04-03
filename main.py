@@ -4,8 +4,12 @@ from model import TdmsDir, Model
 from PyQt6.QtWidgets import QApplication
 import sys
 import logging
+import atexit
 
 #RUN THIS ONE
+
+def cleanup(model: Model):
+    model.output.close()
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -27,7 +31,5 @@ if __name__ == "__main__":
     cfg = SettingsControlPanel(settings, buttons)
     w = MainWindow(title = "Translocation Finder: Earle Edition",top = io,mid = plots,bott = cfg)
     ctrlr = Controller(w,model)
-    try:
-        app.exec()
-    except:
-        ctrlr._m.output.close()
+    atexit.register(lambda: cleanup(model))
+    app.exec()
