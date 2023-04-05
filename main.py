@@ -8,9 +8,6 @@ import atexit
 
 #RUN THIS ONE
 
-def cleanup(model: Model):
-    model.output.close()
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     app = QApplication(sys.argv)
@@ -31,5 +28,4 @@ if __name__ == "__main__":
     cfg = SettingsControlPanel(settings, buttons)
     w = MainWindow(title = "Translocation Finder: Earle Edition",top = io,mid = plots,bott = cfg)
     ctrlr = Controller(w,model)
-    atexit.register(lambda: cleanup(model))
     app.exec()
