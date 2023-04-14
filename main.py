@@ -1,10 +1,9 @@
 from view import MainWindow, IOPanel, PlotPanel, SettingsControlPanel
 from controller import Controller
-from model import TdmsDir, Model
+from model import Model
 from PyQt6.QtWidgets import QApplication
 import sys
 import logging
-import atexit
 
 #RUN THIS ONE
 

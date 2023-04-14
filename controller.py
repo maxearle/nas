@@ -216,10 +216,3 @@ class Controller():
         self._v.close()
         self._m.output.close()
         AllDone(f"All done! {len(self._m.tdms.file_list)} tdms files read, {self.accepted_count} events saved.")
-
-
-
-
-
-
-
